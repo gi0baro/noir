@@ -1,5 +1,9 @@
 def make_dist():
-    return default_python_distribution(python_version="3.9")
+    if BUILD_TARGET_TRIPLE == "x86_64-apple-darwin":
+        flavor = "standalone"
+    else:
+        flavor = "standalone_static"
+    return default_python_distribution(python_version="3.9", flavor=flavor)
 
 def make_exe(dist):
     policy = dist.make_python_packaging_policy()
