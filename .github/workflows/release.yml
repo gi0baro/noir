@@ -8,6 +8,7 @@ on:
 jobs:
   Linux:
     runs-on: ubuntu-18.04
+    container: cr.amira.io/gi0baro/pyoxidizer/musl:49c48f5d
 
     steps:
       - uses: actions/checkout@v2
@@ -15,14 +16,6 @@ jobs:
         id: build_version
         run: |
           echo ::set-output name=version::${GITHUB_REF#refs/tags/}
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: 1.51.0
-          default: true
-          profile: minimal
-      - name: Install PyOxidizer
-        run: |
-          cargo install pyoxidizer --version 0.11.0
       - name: Build release
         run: |
           make build_linux
@@ -31,12 +24,12 @@ jobs:
       - name: Upload release file
         uses: actions/upload-artifact@v1
         with:
-          name: noir-${{ steps.build_version.outputs.version }}-x86_64-unknown-linux-musl.tar.gz
+          name: noir-${{ steps.build_version.outputs.version }}-linux-x86_64.tar.gz
           path: dist/noir-${{ steps.build_version.outputs.version }}-x86_64-unknown-linux-musl.tar.gz
       - name: Upload checksum file
         uses: actions/upload-artifact@v1
         with:
-          name: noir-${{ steps.build_version.outputs.version }}-x86_64-unknown-linux-musl.sha256sum
+          name: noir-${{ steps.build_version.outputs.version }}-linux-x86_64.sha256sum
           path: dist/noir-${{ steps.build_version.outputs.version }}-x86_64-unknown-linux-musl.sha256sum
 
   MacOS:
@@ -64,12 +57,12 @@ jobs:
       - name: Upload release file
         uses: actions/upload-artifact@v1
         with:
-          name: noir-${{ steps.build_version.outputs.version }}-x86_64-apple-darwin.tar.gz
+          name: noir-${{ steps.build_version.outputs.version }}-darwin-x86_64.tar.gz
           path: dist/noir-${{ steps.build_version.outputs.version }}-x86_64-apple-darwin.tar.gz
       - name: Upload checksum file
         uses: actions/upload-artifact@v1
         with:
-          name: noir-${{ steps.build_version.outputs.version }}-x86_64-apple-darwin.sha256sum
+          name: noir-${{ steps.build_version.outputs.version }}-darwin-x86_64.sha256sum
           path: dist/noir-${{ steps.build_version.outputs.version }}-x86_64-apple-darwin.sha256sum
 
   Windows:
@@ -98,12 +91,12 @@ jobs:
     - name: Upload release file
       uses: actions/upload-artifact@v1
       with:
-        name: noir-${{ steps.build_version.outputs.version }}-x86_64-pc-windows-msvc.tar.gz
+        name: noir-${{ steps.build_version.outputs.version }}-windows-x86_64.tar.gz
         path: dist/noir-${{ steps.build_version.outputs.version }}-x86_64-pc-windows-msvc.tar.gz
     - name: Upload checksum file
       uses: actions/upload-artifact@v1
       with:
-        name: noir-${{ steps.build_version.outputs.version }}-x86_64-pc-windows-msvc.sha256sum
+        name: noir-${{ steps.build_version.outputs.version }}-windows-x86_64.sha256sum
         path: dist/noir-${{ steps.build_version.outputs.version }}-x86_64-pc-windows-msvc.sha256sum
 
   Release:
@@ -120,32 +113,32 @@ jobs:
       - name: Download Linux release file
         uses: actions/download-artifact@master
         with:
-          name: noir-${{ steps.tag.outputs.tag }}-x86_64-unknown-linux-musl.tar.gz
+          name: noir-${{ steps.tag.outputs.tag }}-linux-x86_64.tar.gz
           path: dist/
       - name: Download Linux checksum file
         uses: actions/download-artifact@master
         with:
-          name: noir-${{ steps.tag.outputs.tag }}-x86_64-unknown-linux-musl.sha256sum
+          name: noir-${{ steps.tag.outputs.tag }}-linux-x86_64.sha256sum
           path: dist/
       - name: Download MacOS release file
         uses: actions/download-artifact@master
         with:
-          name: noir-${{ steps.tag.outputs.tag }}-x86_64-apple-darwin.tar.gz
+          name: noir-${{ steps.tag.outputs.tag }}-darwin-x86_64.tar.gz
           path: dist/
       - name: Download MacOS checksum file
         uses: actions/download-artifact@master
         with:
-          name: noir-${{ steps.tag.outputs.tag }}-x86_64-apple-darwin.sha256sum
+          name: noir-${{ steps.tag.outputs.tag }}-darwin-x86_64.sha256sum
           path: dist/
       - name: Download Windows release file
         uses: actions/download-artifact@master
         with:
-          name: noir-${{ steps.tag.outputs.tag }}-x86_64-pc-windows-msvc.tar.gz
+          name: noir-${{ steps.tag.outputs.tag }}-windows-x86_64.tar.gz
           path: dist/
       - name: Download Windows checksum file
         uses: actions/download-artifact@master
         with:
-          name: noir-${{ steps.tag.outputs.tag }}-x86_64-pc-windows-msvc.sha256sum
+          name: noir-${{ steps.tag.outputs.tag }}-windows-x86_64.sha256sum
           path: dist/
       - name: Create Release
         id: create_release
@@ -163,8 +156,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/noir-${{ steps.tag.outputs.tag }}-x86_64-unknown-linux-musl.tar.gz
-          asset_name: noir-${{ steps.tag.outputs.tag }}-x86_64-unknown-linux-musl.tar.gz
+          asset_path: dist/noir-${{ steps.tag.outputs.tag }}-linux-x86_64.tar.gz
+          asset_name: noir-${{ steps.tag.outputs.tag }}-linux-x86_64.tar.gz
           asset_content_type: application/gzip
       - name: Upload Linux checksum file asset
         uses: actions/upload-release-asset@v1.0.1
@@ -172,8 +165,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/noir-${{ steps.tag.outputs.tag }}-x86_64-unknown-linux-musl.sha256sum
-          asset_name: noir-${{ steps.tag.outputs.tag }}-x86_64-unknown-linux-musl.sha256sum
+          asset_path: dist/noir-${{ steps.tag.outputs.tag }}-linux-x86_64.sha256sum
+          asset_name: noir-${{ steps.tag.outputs.tag }}-linux-x86_64.sha256sum
           asset_content_type: text/plain
       - name: Upload MacOS release file asset
         uses: actions/upload-release-asset@v1.0.1
@@ -181,8 +174,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/noir-${{ steps.tag.outputs.tag }}-x86_64-apple-darwin.tar.gz
-          asset_name: noir-${{ steps.tag.outputs.tag }}-x86_64-apple-darwin.tar.gz
+          asset_path: dist/noir-${{ steps.tag.outputs.tag }}-darwin-x86_64.tar.gz
+          asset_name: noir-${{ steps.tag.outputs.tag }}-darwin-x86_64.tar.gz
           asset_content_type: application/gzip
       - name: Upload MacOS checksum file asset
         uses: actions/upload-release-asset@v1.0.1
@@ -190,8 +183,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/noir-${{ steps.tag.outputs.tag }}-x86_64-apple-darwin.sha256sum
-          asset_name: noir-${{ steps.tag.outputs.tag }}-x86_64-apple-darwin.sha256sum
+          asset_path: dist/noir-${{ steps.tag.outputs.tag }}-darwin-x86_64.sha256sum
+          asset_name: noir-${{ steps.tag.outputs.tag }}-darwin-x86_64.sha256sum
           asset_content_type: text/plain
       - name: Upload Windows release file asset
         uses: actions/upload-release-asset@v1.0.1
@@ -199,8 +192,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/noir-${{ steps.tag.outputs.tag }}-x86_64-pc-windows-msvc.tar.gz
-          asset_name: noir-${{ steps.tag.outputs.tag }}-x86_64-pc-windows-msvc.tar.gz
+          asset_path: dist/noir-${{ steps.tag.outputs.tag }}-windows-x86_64.tar.gz
+          asset_name: noir-${{ steps.tag.outputs.tag }}-windows-x86_64.tar.gz
           asset_content_type: application/gzip
       - name: Upload Windows checksum file asset
         uses: actions/upload-release-asset@v1.0.1
@@ -208,6 +201,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/noir-${{ steps.tag.outputs.tag }}-x86_64-pc-windows-msvc.sha256sum
-          asset_name: noir-${{ steps.tag.outputs.tag }}-x86_64-pc-windows-msvc.sha256sum
+          asset_path: dist/noir-${{ steps.tag.outputs.tag }}-windows-x86_64.sha256sum
+          asset_name: noir-${{ steps.tag.outputs.tag }}-windows-x86_64.sha256sum
           asset_content_type: text/plain

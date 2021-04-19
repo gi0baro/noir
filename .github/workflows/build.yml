@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - master
+    paths:
+      - .github/workflows/build.yml
+      - noir/**/*
+      - Makefile
+      - poetry.lock
+      - pyoxidizer.bzl
 
 jobs:
   Linux:
