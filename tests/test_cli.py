@@ -1,3 +1,5 @@
+import os
+
 from pathlib import Path
 
 import pytest
@@ -24,16 +26,12 @@ def runner():
 
 
 @pytest.fixture(scope="function")
-def src():
-    return str(Path(__file__).resolve().parent / "assets" / "nginx.tpl")
-
-
-@pytest.fixture(scope="function")
 def asset():
+    cwd = Path(os.getcwd())
     local = Path(__file__).resolve().parent / "assets"
 
     def m(file: str) -> str:
-        return str(local / file)
+        return str((local / file).relative_to(cwd))
 
     return m
 

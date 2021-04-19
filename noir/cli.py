@@ -73,7 +73,7 @@ def main(
     tctx = {}
     for ctx_param in context:
         ctx_raw_ns, ctx_raw_path = (
-            ctx_param.split(":") if ":" in ctx_param else
+            ctx_param.split(":", 1) if ":" in ctx_param else
             (None, ctx_param)
         )
         ctx_path = Path(ctx_raw_path).resolve()

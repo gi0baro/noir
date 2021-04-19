@@ -5,7 +5,9 @@ from noir.templating import templater
 
 
 def test_env():
-    assert templater._render("{{ =env.HOME }}", 'tenv') == os.environ.get("HOME")
+    assert templater._render(
+        "{{ =env.get('HOME', '') }}", 'tenv'
+    ) == os.environ.get("HOME", "")
 
 
 _indent_in = """{
