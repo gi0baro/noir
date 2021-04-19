@@ -24,12 +24,12 @@ jobs:
       - name: Upload release file
         uses: actions/upload-artifact@v1
         with:
-          name: noir-${{ steps.build_version.outputs.version }}-x86_64-unknown-linux-musl.tar.gz
+          name: noir-${{ steps.build_version.outputs.version }}-linux-x86_64.tar.gz
           path: dist/noir-${{ steps.build_version.outputs.version }}-x86_64-unknown-linux-musl.tar.gz
       - name: Upload checksum file
         uses: actions/upload-artifact@v1
         with:
-          name: noir-${{ steps.build_version.outputs.version }}-x86_64-unknown-linux-musl.sha256sum
+          name: noir-${{ steps.build_version.outputs.version }}-linux-x86_64.sha256sum
           path: dist/noir-${{ steps.build_version.outputs.version }}-x86_64-unknown-linux-musl.sha256sum
 
   MacOS:
@@ -57,12 +57,12 @@ jobs:
       - name: Upload release file
         uses: actions/upload-artifact@v1
         with:
-          name: noir-${{ steps.build_version.outputs.version }}-x86_64-apple-darwin.tar.gz
+          name: noir-${{ steps.build_version.outputs.version }}-darwin-x86_64.tar.gz
           path: dist/noir-${{ steps.build_version.outputs.version }}-x86_64-apple-darwin.tar.gz
       - name: Upload checksum file
         uses: actions/upload-artifact@v1
         with:
-          name: noir-${{ steps.build_version.outputs.version }}-x86_64-apple-darwin.sha256sum
+          name: noir-${{ steps.build_version.outputs.version }}-darwin-x86_64.sha256sum
           path: dist/noir-${{ steps.build_version.outputs.version }}-x86_64-apple-darwin.sha256sum
 
   Windows:
@@ -91,10 +91,10 @@ jobs:
     - name: Upload release file
       uses: actions/upload-artifact@v1
       with:
-        name: noir-${{ steps.build_version.outputs.version }}-x86_64-pc-windows-msvc.tar.gz
+        name: noir-${{ steps.build_version.outputs.version }}-windows-x86_64.tar.gz
         path: dist/noir-${{ steps.build_version.outputs.version }}-x86_64-pc-windows-msvc.tar.gz
     - name: Upload checksum file
       uses: actions/upload-artifact@v1
       with:
-        name: noir-${{ steps.build_version.outputs.version }}-x86_64-pc-windows-msvc.sha256sum
+        name: noir-${{ steps.build_version.outputs.version }}-windows-x86_64.sha256sum
         path: dist/noir-${{ steps.build_version.outputs.version }}-x86_64-pc-windows-msvc.sha256sum
