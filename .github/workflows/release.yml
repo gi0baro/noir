@@ -21,16 +21,18 @@ jobs:
           make build_linux
           build/x86_64-unknown-linux-musl/release/install/noir --version
           make pack_linux BUILD_VERSION=${{ steps.build_version.outputs.version }}
+          mv dist/noir-${{ steps.build_version.outputs.version }}-x86_64-unknown-linux-musl.tar.gz dist/noir-${{ steps.build_version.outputs.version }}-linux-x86_64.tar.gz
+          mv dist/noir-${{ steps.build_version.outputs.version }}-x86_64-unknown-linux-musl.sha256sum dist/noir-${{ steps.build_version.outputs.version }}-linux-x86_64.sha256sum
       - name: Upload release file
         uses: actions/upload-artifact@v1
         with:
           name: noir-${{ steps.build_version.outputs.version }}-linux-x86_64.tar.gz
-          path: dist/noir-${{ steps.build_version.outputs.version }}-x86_64-unknown-linux-musl.tar.gz
+          path: dist/noir-${{ steps.build_version.outputs.version }}-linux-x86_64.tar.gz
       - name: Upload checksum file
         uses: actions/upload-artifact@v1
         with:
           name: noir-${{ steps.build_version.outputs.version }}-linux-x86_64.sha256sum
-          path: dist/noir-${{ steps.build_version.outputs.version }}-x86_64-unknown-linux-musl.sha256sum
+          path: dist/noir-${{ steps.build_version.outputs.version }}-linux-x86_64.sha256sum
 
   MacOS:
     runs-on: macos-latest
@@ -54,16 +56,18 @@ jobs:
           make build_mac ARCH=x86_64-apple-darwin
           build/x86_64-apple-darwin/release/install/noir --version
           make pack_mac ARCH=x86_64-apple-darwin BUILD_VERSION=${{ steps.build_version.outputs.version }}
+          mv dist/noir-${{ steps.build_version.outputs.version }}-x86_64-apple-darwin.tar.gz dist/noir-${{ steps.build_version.outputs.version }}-darwin-x86_64.tar.gz
+          mv dist/noir-${{ steps.build_version.outputs.version }}-x86_64-apple-darwin.sha256sum dist/noir-${{ steps.build_version.outputs.version }}-darwin-x86_64.sha256sum
       - name: Upload release file
         uses: actions/upload-artifact@v1
         with:
           name: noir-${{ steps.build_version.outputs.version }}-darwin-x86_64.tar.gz
-          path: dist/noir-${{ steps.build_version.outputs.version }}-x86_64-apple-darwin.tar.gz
+          path: dist/noir-${{ steps.build_version.outputs.version }}-darwin-x86_64.tar.gz
       - name: Upload checksum file
         uses: actions/upload-artifact@v1
         with:
           name: noir-${{ steps.build_version.outputs.version }}-darwin-x86_64.sha256sum
-          path: dist/noir-${{ steps.build_version.outputs.version }}-x86_64-apple-darwin.sha256sum
+          path: dist/noir-${{ steps.build_version.outputs.version }}-darwin-x86_64.sha256sum
 
   Windows:
     runs-on: windows-2019
@@ -88,16 +92,18 @@ jobs:
         make build_win
         build/x86_64-pc-windows-msvc/release/install/noir --version
         make pack_win BUILD_VERSION=${{ steps.build_version.outputs.version }}
+        mv dist/noir-${{ steps.build_version.outputs.version }}-x86_64-pc-windows-msvc.tar.gz dist/noir-${{ steps.build_version.outputs.version }}-windows-x86_64.tar.gz
+        mv dist/noir-${{ steps.build_version.outputs.version }}-x86_64-pc-windows-msvc.sha256sum dist/noir-${{ steps.build_version.outputs.version }}-windows-x86_64.sha256sum
     - name: Upload release file
       uses: actions/upload-artifact@v1
       with:
         name: noir-${{ steps.build_version.outputs.version }}-windows-x86_64.tar.gz
-        path: dist/noir-${{ steps.build_version.outputs.version }}-x86_64-pc-windows-msvc.tar.gz
+        path: dist/noir-${{ steps.build_version.outputs.version }}-windows-x86_64.tar.gz
     - name: Upload checksum file
       uses: actions/upload-artifact@v1
       with:
         name: noir-${{ steps.build_version.outputs.version }}-windows-x86_64.sha256sum
-        path: dist/noir-${{ steps.build_version.outputs.version }}-x86_64-pc-windows-msvc.sha256sum
+        path: dist/noir-${{ steps.build_version.outputs.version }}-windows-x86_64.sha256sum
 
   Release:
     needs: [Linux, MacOS, Windows]
