@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "noir"
 version = "0.1.0"
-description = ""
-authors = ["Giovanni Barillari <giovanni.barillari@gmail.com>"]
+description = "CLI interface to Renoir templating engine"
+authors = ["Giovanni Barillari <gi0baro@d4net.org>"]
 
 [tool.poetry.scripts]
 noir = "noir.cli:main"
