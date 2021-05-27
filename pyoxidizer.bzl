@@ -38,5 +38,5 @@ register_target("install", make_install, depends=["exe"], default=True)
 
 resolve_targets()
 
-PYOXIDIZER_VERSION = "0.11.0"
-PYOXIDIZER_COMMIT = "UNKNOWN"
+PYOXIDIZER_VERSION = "0.16.0"
+PYOXIDIZER_COMMIT = "4053178f2ba11d29f497d171289cb847cd07ed77"
