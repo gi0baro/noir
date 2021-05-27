@@ -82,7 +82,6 @@ def main(
         try:
             data = load_context_file(ctx_path, format=format)
         except Exception:
-            raise
             error(f"Cannot load context file '{ctx_raw_path}'.", ctx)
         if ctx_raw_ns:
             tctx[ctx_raw_ns] = data
@@ -100,7 +99,7 @@ def main(
         rctx = tctx
         nk = k.split(":")
         for element in nk[:-1]:
-            rctx = tctx[element] = tctx.get(element) or {}
+            rctx = rctx[element] = rctx.get(element) or {}
         rctx[nk[-1]] = v
     try:
         rendered = templater.render(Path(src).resolve(), dict_to_adict(tctx))
