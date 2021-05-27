@@ -4,12 +4,12 @@ import os
 from typing import Any, Dict, Optional
 
 import tomlkit
+import yaml
 
 from renoir.apis import Renoir, ESCAPES, MODES
 from renoir.writers import Writer as _Writer
-from yaml import dump as ymldump
 
-from .utils import dict_to_adict
+from .utils import adict, dict_to_adict
 
 
 class Writer(_Writer):
@@ -41,7 +41,7 @@ def _to_toml(obj: Any) -> str:
 
 
 def _to_yaml(obj: Any) -> str:
-    return ymldump(obj)
+    return yaml.dump(obj)
 
 
 def base_ctx(ctx: Dict[str, Any]):
@@ -54,4 +54,5 @@ def base_ctx(ctx: Dict[str, Any]):
     )
 
 
+yaml.add_representer(adict, yaml.representer.Representer.represent_dict)
 templater = Templater(mode=MODES.plain, adjust_indent=True, contexts=[base_ctx])
