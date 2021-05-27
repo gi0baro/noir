@@ -99,7 +99,8 @@ def main(
         rctx = tctx
         nk = k.split(":")
         for element in nk[:-1]:
-            rctx = rctx[element] = rctx.get(element) or {}
+            rctx[element] = rctx.get(element) or {}
+            rctx = rctx[element]
         rctx[nk[-1]] = v
     try:
         rendered = templater.render(Path(src).resolve(), dict_to_adict(tctx))
