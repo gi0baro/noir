@@ -5,7 +5,13 @@ def make_dist():
         flavor = "standalone"
     return default_python_distribution(python_version="3.9", flavor=flavor)
 
-def make_exe(dist):
+def make_exe():
+    if BUILD_TARGET_TRIPLE == "x86_64-unknown-linux-musl":
+        flavor = "standalone_static"
+    else:
+        flavor = "standalone"
+    dist = default_python_distribution(python_version="3.9", flavor=flavor)
+
     policy = dist.make_python_packaging_policy()
     policy.resources_location_fallback = "filesystem-relative:lib"
 
@@ -31,12 +37,8 @@ def make_install(exe):
     return files
 
 
-register_target("dist", make_dist)
-register_target("exe", make_exe, depends=["dist"])
+register_target("exe", make_exe)
 register_target("resources", make_embedded_resources, depends=["exe"], default_build_script=True)
 register_target("install", make_install, depends=["exe"], default=True)
 
 resolve_targets()
-
-PYOXIDIZER_VERSION = "0.16.0"
-PYOXIDIZER_COMMIT = "4053178f2ba11d29f497d171289cb847cd07ed77"
