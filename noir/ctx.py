@@ -2,7 +2,7 @@ import json
 
 from configparser import ConfigParser
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Callable, Dict, Optional
 
 import tomlkit
 
@@ -10,11 +10,11 @@ from yaml import SafeLoader as ymlLoader, load as ymlload
 
 
 class Parsers:
-    registry = {}
+    registry: Dict[str, Callable[[str], Dict[str, Any]]] = {}
 
     @classmethod
     def register(cls, name: str):
-        def wrap(f):
+        def wrap(f: Callable[[str], Dict[str, Any]]) -> Callable[[str], Dict[str, Any]]:
             cls.registry[name] = f
             return f
         return wrap

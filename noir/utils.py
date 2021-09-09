@@ -1,6 +1,9 @@
 import copy
+import os
 
-from typing import Any, Dict
+from typing import Any, Dict, List, TypeVar, Union, overload
+
+T = TypeVar("T")
 
 
 class adict(dict):
@@ -14,10 +17,35 @@ class adict(dict):
     __deepcopy__ = lambda self, memo: adict(copy.deepcopy(dict(self)))
 
 
-def dict_to_adict(obj: Dict[str, Any]) -> adict:
-    rv = adict()
-    for key, val in obj.items():
-        if isinstance(val, dict):
-            val = dict_to_adict(val)
-        rv[key] = val
-    return rv
+@overload
+def obj_to_adict(obj: Dict[str, Any]) -> adict:
+    ...
+
+
+@overload
+def obj_to_adict(obj: List[Dict[str, Any]]) -> List[adict]:
+    ...
+
+
+@overload
+def obj_to_adict(obj: os._Environ) -> adict:
+    ...
+
+
+@overload
+def obj_to_adict(obj: T) -> Union[T, adict, List[adict]]:
+    ...
+
+
+def obj_to_adict(obj: Any) -> Any:
+    if isinstance(obj, dict):
+        rv = adict()
+        for key, val in obj.items():
+            rv[key] = obj_to_adict(val)
+        return rv
+    if isinstance(obj, (list, tuple)):
+        rv = []
+        for element in obj:
+            rv.append(obj_to_adict(element))
+        return rv
+    return obj

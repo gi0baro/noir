@@ -9,7 +9,7 @@ import yaml
 from renoir.apis import Renoir, ESCAPES, MODES
 from renoir.writers import Writer as _Writer
 
-from .utils import adict, dict_to_adict
+from .utils import adict, obj_to_adict
 
 
 class Writer(_Writer):
@@ -46,7 +46,7 @@ def _to_yaml(obj: Any) -> str:
 
 def base_ctx(ctx: Dict[str, Any]):
     ctx.update(
-        env=dict_to_adict(os.environ),
+        env=obj_to_adict(os.environ),
         indent=_indent,
         to_json=_to_json,
         to_toml=_to_toml,
