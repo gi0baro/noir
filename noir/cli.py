@@ -8,7 +8,7 @@ import crashtest.inspector
 from .__version__ import __version__
 from .ctx import Parsers, load_context_file
 from .templating import templater
-from .utils import dict_to_adict
+from .utils import obj_to_adict
 
 
 class CLIException(click.ClickException):
@@ -83,10 +83,11 @@ def main(
             data = load_context_file(ctx_path, format=format)
         except Exception:
             error(f"Cannot load context file '{ctx_raw_path}'.", ctx)
+        rctx = tctx
         if ctx_raw_ns:
-            tctx[ctx_raw_ns] = data
-        else:
-            tctx.update(data)
+            rctx[ctx_raw_ns] = rctx.get(ctx_raw_ns) or {}
+            rctx = rctx[ctx_raw_ns]
+        rctx.update(data)
     for var_param in var:
         try:
             k, v = var_param.split("=")
@@ -103,7 +104,7 @@ def main(
             rctx = rctx[element]
         rctx[nk[-1]] = v
     try:
-        rendered = templater.render(Path(src).resolve(), dict_to_adict(tctx))
+        rendered = templater.render(Path(src).resolve(), obj_to_adict(tctx))
     except Exception as e:
         raise CLIException(e)
     output.write(rendered)
