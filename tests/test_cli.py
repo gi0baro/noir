@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from click.testing import CliRunner
-from noir.cli import main
+from typer.testing import CliRunner
+from noir.cli import app
 
 _expected_output = """server {
   listen 80;
@@ -38,12 +38,12 @@ def asset():
 
 def test_env(runner, asset):
     res = runner.invoke(
-        main, [asset("nginx.ns.tpl"), "-c", f"nginx:{asset('ctx.env')}"]
+        app, [asset("nginx.ns.tpl"), "-c", f"nginx:{asset('ctx.env')}"]
     )
     assert res.exit_code == 0
     assert res.output == _expected_output
 
-    res = runner.invoke(main, [
+    res = runner.invoke(app, [
         asset("nginx.ns.tpl"),
         "-c", f"nginx:{asset('ctx.empty.env')}",
         "-v", "nginx:hostname=localhost",
@@ -55,35 +55,35 @@ def test_env(runner, asset):
 
 
 def test_ini(runner, asset):
-    res = runner.invoke(main, [asset("nginx.ns.tpl"), "-c", asset('ctx.ini')])
+    res = runner.invoke(app, [asset("nginx.ns.tpl"), "-c", asset('ctx.ini')])
     assert res.exit_code == 0
     assert res.output == _expected_output
 
 
 def test_json(runner, asset):
-    res = runner.invoke(main, [asset("nginx.ns.tpl"), "-c", asset('ctx.json')])
+    res = runner.invoke(app, [asset("nginx.ns.tpl"), "-c", asset('ctx.json')])
     assert res.exit_code == 0
     assert res.output == _expected_output
 
 
 def test_toml(runner, asset):
-    res = runner.invoke(main, [asset("nginx.ns.tpl"), "-c", asset('ctx.toml')])
+    res = runner.invoke(app, [asset("nginx.ns.tpl"), "-c", asset('ctx.toml')])
     assert res.exit_code == 0
     assert res.output == _expected_output
 
 
 def test_yaml(runner, asset):
-    res = runner.invoke(main, [asset("nginx.ns.tpl"), "-c", asset('ctx.yaml')])
+    res = runner.invoke(app, [asset("nginx.ns.tpl"), "-c", asset('ctx.yaml')])
     assert res.exit_code == 0
     assert res.output == _expected_output
 
-    res = runner.invoke(main, [asset("nginx.ns.tpl"), "-c", asset('ctx.yml')])
+    res = runner.invoke(app, [asset("nginx.ns.tpl"), "-c", asset('ctx.yml')])
     assert res.exit_code == 0
     assert res.output == _expected_output
 
 
 def test_osenv(runner, asset):
-    res = runner.invoke(main, [asset("nginx.osenv.tpl")], env={
+    res = runner.invoke(app, [asset("nginx.osenv.tpl")], env={
         "NGINX_HOSTNAME": "localhost",
         "NGINX_WEBROOT": "/var/www/project",
         "NGINX_LOGS": "/var/log/nginx/"
@@ -93,7 +93,7 @@ def test_osenv(runner, asset):
 
 
 def test_vars(runner, asset):
-    res = runner.invoke(main, [
+    res = runner.invoke(app, [
         asset("nginx.var.tpl"),
         "-v", "hostname=localhost",
         "-v", "webroot=/var/www/project",

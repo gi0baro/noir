@@ -1,21 +1,32 @@
 import json
 
 from configparser import ConfigParser
+from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Dict, Optional, TextIO
 
 import tomlkit
 
+from typer import get_text_stream
 from yaml import SafeLoader as ymlLoader, load as ymlload
 
 
+class ContextExt(Enum):
+    env = "env"
+    ini = "ini"
+    json = "json"
+    toml = "toml"
+    yaml = "yaml"
+    yml = "yml"
+
+
 class Parsers:
-    registry: Dict[str, Callable[[str], Dict[str, Any]]] = {}
+    registry: Dict[ContextExt, Callable[[str], Dict[str, Any]]] = {}
 
     @classmethod
-    def register(cls, name: str):
+    def register(cls, ext: ContextExt):
         def wrap(f: Callable[[str], Dict[str, Any]]) -> Callable[[str], Dict[str, Any]]:
-            cls.registry[name] = f
+            cls.registry[ext] = f
             return f
         return wrap
 
@@ -37,7 +48,7 @@ class UnsupportedFormat(Exception):
     pass
 
 
-@Parsers.register("env")
+@Parsers.register(ContextExt.env)
 def parse_env(data: str) -> Dict[str, Any]:
     return dict(
         (k.lower(), v) for k, v in filter(
@@ -48,33 +59,40 @@ def parse_env(data: str) -> Dict[str, Any]:
     )
 
 
-@Parsers.register("ini")
+@Parsers.register(ContextExt.ini)
 def parse_ini(data: str) -> Dict[str, Any]:
     return INIParser().read_string(data).as_dict()
 
 
-@Parsers.register("json")
+@Parsers.register(ContextExt.json)
 def parse_json(data: str) -> Dict[str, Any]:
     return json.loads(data)
 
 
-@Parsers.register("toml")
+@Parsers.register(ContextExt.toml)
 def parse_toml(data: str) -> Dict[str, Any]:
     return tomlkit.loads(data)
 
 
-@Parsers.register("yaml")
-@Parsers.register("yml")
+@Parsers.register(ContextExt.yaml)
+@Parsers.register(ContextExt.yml)
 def parse_yaml(data: str) -> Dict[str, Any]:
     return ymlload(data, Loader=ymlLoader)
 
 
-def load_context_file(file_path: Path, format: Optional[str] = None):
+def load_context_file(
+    file_path: Path,
+    stream_reader: Callable[[], TextIO],
+    format: Optional[ContextExt] = None
+):
     try:
-        parser = Parsers.registry[format or file_path.suffix[1:] or "env"]
+        format = format or ContextExt[file_path.suffix[1:] or "env"]
     except KeyError:
         raise UnsupportedFormat()
 
-    with file_path.open("r") as f:
-        data = f.read()
-    return parser(data)
+    if file_path == Path("-"):
+        data = stream_reader()
+    else:
+        with file_path.open("r") as f:
+            data = f.read()
+    return Parsers.registry[format](data)
