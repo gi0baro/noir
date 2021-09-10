@@ -49,7 +49,7 @@ def error(msg: str):
 
 @app.command()
 def main(
-    src: Path = typer.Argument(
+    source: Path = typer.Argument(
         ...,
         exists=True,
         file_okay=True,
@@ -87,6 +87,10 @@ def main(
         help="Show the version and exit."
     )
 ):
+    """
+    Render a SOURCE template file using specified contexts and vars.
+    """
+
     stream_reader = lambda: typer.get_text_stream("stdin")
     tctx = {}
     for ctx_path in context:
@@ -106,7 +110,7 @@ def main(
             rctx = rctx[ns]
         rctx[var_param.key] = var_param.val
     try:
-        rendered = templater.render(src, obj_to_adict(tctx))
+        rendered = templater.render(source, obj_to_adict(tctx))
     except Exception as e:
         raise CLIException(e)
     output.write(rendered)

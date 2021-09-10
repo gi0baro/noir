@@ -1,6 +1,6 @@
 # Noir
 
-Noir – /nwɑːr/ – is a CLI interface to [Renoir](https://github.com/emmett-framework/renoir) templating engine.
+Noir – /nwɑːr/ – is a CLI to [Renoir](https://github.com/emmett-framework/renoir) templating engine.
 
 Typical use case for Noir is generating configuration files and manifests for services and applications.
 
@@ -16,19 +16,28 @@ or you can manually download the packages from the [releases page](https://githu
 
 ## Usage
 
-```bash
+```
 ❯ noir --help
-Usage: noir [OPTIONS] SRC
+Usage: noir [OPTIONS] SOURCE
+
+  Render a SOURCE template file using specified contexts and vars.
+
+Arguments:
+  SOURCE  The template file to use.  [required]
 
 Options:
-  -c, --context TEXT              Context file(s) to use.
-  -f, --format [env|ini|json|toml|yml|yaml]
+  -c, --context PATH              Context file(s) to use.
+  -f, --format [env|ini|json|toml|yaml|yml]
                                   Context file format (default: guess from
                                   file extension).
-
   -o, --output FILENAME           Target output (default: stdout)
-  -v, --var TEXT                  Context variable(s) to apply.
+  -v, --var PATH                  Context variable(s) to apply.
   --version                       Show the version and exit.
+  --install-completion [bash|zsh|fish|powershell|pwsh]
+                                  Install completion for the specified shell.
+  --show-completion [bash|zsh|fish|powershell|pwsh]
+                                  Show completion for the specified shell, to
+                                  copy it or customize the installation.
   --help                          Show this message and exit.
 ```
 
@@ -145,7 +154,7 @@ You can reach the same result passing variables directly, like:
     > nginx.conf
 ```
 
-Since *Renoir* supports fully-functional Python code, you can also define structures and import libraries, for example you can produce a `secrets.yaml` manifest for kubernetes using environment variables starting with `K8S_`:
+Since [Renoir](https://github.com/emmett-framework/renoir) supports fully-functional Python code, you can also define structures and import libraries, for example you can produce a `secrets.yaml` manifest for kubernetes using environment variables starting with `K8S_`:
 
 ```yaml
 {{ import base64 }}
