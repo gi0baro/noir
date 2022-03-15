@@ -212,7 +212,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "renoir"
-version = "1.5.2"
+version = "1.5.3"
 description = "A templating engine designed with simplicity in mind"
 category = "main"
 optional = false
@@ -278,7 +278,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "b6bfad4269dc8e60848f2062a46bc376fc09ca55f3dc17722a73431894a5cccc"
+content-hash = "beef62b06f222dfa84262ea0f871e99909470195a24f20c47f27023fbf614ca7"
 
 [metadata.files]
 astroid = [
@@ -424,8 +424,8 @@ pyyaml = [
     {file = "PyYAML-5.3.1.tar.gz", hash = "sha256:b8eac752c5e14d3eca0e6dd9199cd627518cb5ec06add0de9d32baeee6fe645d"},
 ]
 renoir = [
-    {file = "Renoir-1.5.2-py3-none-any.whl", hash = "sha256:015683ee8ad5735df5c40fb096760dd5afe79e8e2952176f7e10310c3da6ac30"},
-    {file = "Renoir-1.5.2.tar.gz", hash = "sha256:084e18ac33c30533aa2d398d14a44a8fbc896266d4b8105e598b6bec39af8fe6"},
+    {file = "Renoir-1.5.3-py3-none-any.whl", hash = "sha256:45451bac4a37c6df497cf3fb570abbd8c86cef0d220f4a147e16acf8fefc7069"},
+    {file = "Renoir-1.5.3.tar.gz", hash = "sha256:8b57ff8f11dd88deef256e7e1da8e84d043e43f8b75482020e35a38975d54403"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
