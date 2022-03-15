@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "noir"
-version = "0.3.1"
+version = "0.3.2"
 description = "CLI to Renoir templating engine"
 authors = ["Giovanni Barillari <gi0baro@d4net.org>"]
 license = "BSD-3-Clause"
