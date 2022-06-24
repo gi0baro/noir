@@ -25,6 +25,7 @@ build_win: compile
 
 compile: _path_build clean_build clean_dist
 	pyoxidizer build --release --target-triple=${ARCH}
+	rm -rf ${BUILDPATH}/COPYING.txt
 
 sign: _path_build
 	@codesign -s - ${BUILDPATH}/noir
