@@ -91,7 +91,7 @@ def load_context_file(
         raise UnsupportedFormat()
 
     if file_path == Path("-"):
-        data = stream_reader()
+        data = stream_reader().read()
     else:
         with file_path.open("r") as f:
             data = f.read()
