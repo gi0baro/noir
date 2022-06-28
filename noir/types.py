@@ -18,6 +18,17 @@ class CLIType(ABC, Generic[T]):
         ...
 
 
+class SourceParam(click.Path):
+    def convert(self, value: Any, param: Any, ctx: Any) -> Source:
+        is_path = True
+        try:
+            rv = super().convert(value, param, ctx)
+        except click.exceptions.BadParameter:
+            rv = value
+            is_path = False
+        return Source(rv, is_path)
+
+
 class ContextFilePathParam(click.Path):
     def convert(self, value: Any, param: Any, ctx: Any) -> ContextFilePath:
         if not isinstance(value, str):
@@ -45,6 +56,25 @@ class ContextVarParam(click.Path):
         elements = key.split(":")
         ns, key = elements[:-1], elements[-1]
         return ContextVar(ns, key, val)
+
+
+class Source(CLIType[SourceParam]):
+    __slots__ = ['data', 'is_path']
+
+    parser = SourceParam
+
+    @classmethod
+    def cli_parser(cls) -> SourceParam:
+        return SourceParam(
+            exists=True,
+            file_okay=True,
+            readable=True,
+            resolve_path=True
+        )
+
+    def __init__(self, data: str, is_path: bool) -> None:
+        self.data = Path(data) if is_path else data
+        self.is_path = is_path
 
 
 class ContextFilePath(CLIType[ContextFilePathParam]):

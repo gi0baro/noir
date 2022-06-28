@@ -3,9 +3,9 @@ from typing import Any
 import click
 import typer
 
-from .types import ContextFilePath, ContextVar
+from .types import ContextFilePath, ContextVar, Source
 
-CUSTOM_TYPES = {ContextFilePath, ContextVar}
+CUSTOM_TYPES = {ContextFilePath, ContextVar, Source}
 
 _get_click_type = typer.main.get_click_type
 

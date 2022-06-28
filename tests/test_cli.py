@@ -101,3 +101,11 @@ def test_vars(runner, asset):
     ])
     assert res.exit_code == 0
     assert res.output == _expected_output
+
+
+def test_eval(runner):
+    res = runner.invoke(app, [
+        "{{ for i in range (0, 3): }}{{ =i }}\n{{ pass }}", "-e"
+    ])
+    assert res.exit_code == 0
+    assert res.output == "0\n1\n2\n"

@@ -8,7 +8,7 @@ from .__version__ import __version__
 from ._patch import typer
 from .ctx import ContextExt, load_context_file
 from .templating import templater
-from .types import ContextFilePath, ContextVar
+from .types import ContextFilePath, ContextVar, Source
 from .utils import obj_to_adict
 
 
@@ -49,12 +49,8 @@ def error(msg: str):
 
 @app.command()
 def main(
-    source: Path = typer.Argument(
+    source: Source = typer.Argument(
         ...,
-        exists=True,
-        file_okay=True,
-        readable=True,
-        resolve_path=True,
         help="The template file to use."
     ),
     context: List[ContextFilePath] = typer.Option(
@@ -62,6 +58,12 @@ def main(
         "--context",
         "-c",
         help="Context file(s) to use."
+    ),
+    eval: bool = typer.Option(
+        False,
+        "--eval",
+        "-e",
+        help="Parse source as template string."
     ),
     format: Optional[ContextExt] = typer.Option(
         None,
@@ -91,6 +93,8 @@ def main(
     Render a SOURCE template file using specified contexts and vars.
     """
 
+    if not source.is_path and not eval:
+        error(f"Invalid value for 'SOURCE': Path '{source.data}' does not exist.")
     stream_reader = lambda: typer.get_text_stream("stdin")
     tctx = {}
     for ctx_path in context:
@@ -110,7 +114,10 @@ def main(
             rctx = rctx[ns]
         rctx[var_param.key] = var_param.val
     try:
-        rendered = templater.render(source, obj_to_adict(tctx))
+        rendered = (
+            templater.render(source.data, obj_to_adict(tctx)) if not eval else
+            templater._render(source.data, context=obj_to_adict(tctx))
+        )
     except Exception as e:
         raise CLIException(e)
     output.write(rendered)
