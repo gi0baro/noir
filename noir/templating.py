@@ -1,5 +1,9 @@
+import base64
+import datetime
+import hashlib
 import json
 import os
+import random
 
 from typing import Any, Dict, Optional
 
@@ -46,6 +50,10 @@ def _to_yaml(obj: Any) -> str:
 
 def base_ctx(ctx: Dict[str, Any]):
     ctx.update(
+        base64=base64,
+        datetime=datetime,
+        hashlib=hashlib,
+        random=random,
         env=obj_to_adict(os.environ),
         indent=_indent,
         to_json=_to_json,
