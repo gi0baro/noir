@@ -38,7 +38,7 @@ def obj_to_adict(obj: T) -> Union[T, adict, List[adict]]:
 
 
 def obj_to_adict(obj: Any) -> Any:
-    if isinstance(obj, dict):
+    if isinstance(obj, (dict, os._Environ)):
         rv = adict()
         for key, val in obj.items():
             rv[key] = obj_to_adict(val)
