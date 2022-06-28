@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import List, Optional
 
 import click
@@ -90,7 +89,7 @@ def main(
     )
 ):
     """
-    Render a SOURCE template file using specified contexts and vars.
+    Render a SOURCE template file or string using specified contexts and vars.
     """
 
     if not source.is_path and not eval:

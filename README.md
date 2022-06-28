@@ -1,6 +1,6 @@
 # Noir
 
-Noir – /nwɑːr/ – is a CLI to [Renoir](https://github.com/emmett-framework/renoir) templating engine.
+Noir – /nwɑːr/ – is a a template renderer based on [Renoir](https://github.com/emmett-framework/renoir) templating engine.
 
 Typical use case for Noir is generating configuration files and manifests for services and applications.
 
@@ -16,17 +16,18 @@ or you can manually download the packages from the [releases page](https://githu
 
 ## Usage
 
-```
-❯ noir --help
+```console
+$ noir --help
 Usage: noir [OPTIONS] SOURCE
 
-  Render a SOURCE template file using specified contexts and vars.
+  Render a SOURCE template file or string using specified contexts and vars.
 
 Arguments:
   SOURCE  The template file to use.  [required]
 
 Options:
   -c, --context PATH              Context file(s) to use.
+  -e, --eval                      Parse source as template string.
   -f, --format [env|ini|json|toml|yaml|yml]
                                   Context file format (default: guess from
                                   file extension).
@@ -41,7 +42,7 @@ Options:
   --help                          Show this message and exit.
 ```
 
-The `noir` command accepts as the only argument the template file to render.
+The `noir` command accepts as the only argument the template file or string to render.
 
 Contextual data con be loaded from a file, using the `-c/--context` option, which supports the formats:
 
@@ -56,6 +57,17 @@ or directly from the command using the `-v/--var` option.
 Both options support defining a namespace using the `namespace:var` notation.
 
 ### Context helpers
+
+#### libraries
+
+The default context in Noir already imports the following modules from the Python standard library:
+
+- base64
+- datetime
+- hashlib
+- random
+
+> **Note:** additional modules from standard library might be loaded with the `import` statement
 
 #### env
 
@@ -129,8 +141,8 @@ nginx:
 
 Then you can render you configuration file as:
 
-```bash
-❯ noir nginx.conf.tpl -c nginx.yaml > nginx.conf
+```console
+$ noir nginx.conf.tpl -c nginx.yaml > nginx.conf
 ```
 
 which will produce the following `nginx.conf`:
@@ -147,8 +159,8 @@ server {
 
 You can reach the same result passing variables directly, like:
 
-```bash
-❯ noir nginx.conf.tpl \
+```console
+$ noir nginx.conf.tpl \
     -v nginx:hostname=localhost \
     -v nginx:webroot=/var/www/project \
     > nginx.conf
@@ -157,7 +169,6 @@ You can reach the same result passing variables directly, like:
 Since [Renoir](https://github.com/emmett-framework/renoir) supports fully-functional Python code, you can also define structures and import libraries, for example you can produce a `secrets.yaml` manifest for kubernetes using environment variables starting with `K8S_`:
 
 ```yaml
-{{ import base64 }}
 {{ secrets = {k.strip("K8S_"): v for k, v in env.items() if k.startswith("K8S_")} }}
 apiVersion: v1
 kind: Secret
@@ -172,8 +183,32 @@ data:
 
 and render it:
 
-```bash
-❯ export K8S_VAR1=val1
-❯ export K8S_VAR2=val2
-❯ noir secrets.yaml
+```console
+$ export K8S_VAR1=val1
+$ export K8S_VAR2=val2
+$ noir secrets.yaml
+```
+
+Here are some additional examples:
+
+```console
+$ # use environment variables
+$ noir -e 'Hello, {{ =env.USER }}'
+Hello, gi0baro
+
+$ # do some math
+$ noir -e 'the answer is: {{ =6 * 7 }}'
+the answer is: 42
+
+$ # ranges
+$ noir -e '{{ for i in range(5, 0, -1): }}{{ =f"{i} " }}{{ if i == 1: }}{{ ="blastoff".upper() }}{{ pass }}{{ pass }}'
+5 4 3 2 1 BLASTOFF
+
+$ # context from curl requests
+$ curl -s https://ipinfo.io | noir -c ip:- -f json -e 'country code: {{ =ip.country }}'
+country code: IT
+
+$ # pretty printing from stdin
+$ echo '{"cities":["London", "Rome", "New York"]}' | noir -c - -f json -e '{{ =", ".join(cities) }}'
+London, Rome, New York
 ```
