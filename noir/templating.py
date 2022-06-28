@@ -3,7 +3,7 @@ import os
 
 from typing import Any, Dict, Optional
 
-import tomlkit
+import tomli_w
 import yaml
 
 from renoir.apis import Renoir, ESCAPES, MODES
@@ -37,7 +37,7 @@ def _to_json(obj: Any, indent: Optional[int] = None) -> str:
 
 
 def _to_toml(obj: Any) -> str:
-    return tomlkit.dumps(obj)
+    return tomli_w.dumps(obj)
 
 
 def _to_yaml(obj: Any) -> str:

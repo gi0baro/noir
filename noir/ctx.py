@@ -5,9 +5,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional, TextIO
 
-import tomlkit
+import tomli
 
-from typer import get_text_stream
 from yaml import SafeLoader as ymlLoader, load as ymlload
 
 
@@ -71,7 +70,7 @@ def parse_json(data: str) -> Dict[str, Any]:
 
 @Parsers.register(ContextExt.toml)
 def parse_toml(data: str) -> Dict[str, Any]:
-    return tomlkit.loads(data)
+    return tomli.loads(data)
 
 
 @Parsers.register(ContextExt.yaml)
