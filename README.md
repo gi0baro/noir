@@ -1,6 +1,6 @@
 # Noir
 
-Noir – /nwɑːr/ – is a a template renderer based on [Renoir](https://github.com/emmett-framework/renoir) templating engine.
+Noir – /nwɑːr/ – is a template renderer based on [Renoir](https://github.com/emmett-framework/renoir) templating engine.
 
 Typical use case for Noir is generating configuration files and manifests for services and applications.
 
