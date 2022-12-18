@@ -8,6 +8,12 @@ from .types import ContextFilePath, ContextVar, Source
 CUSTOM_TYPES = {ContextFilePath, ContextVar, Source}
 
 _get_click_type = typer.main.get_click_type
+_get_command = typer.main.get_command
+
+
+class Typer(typer.Typer):
+    def __call__(self, *args: Any, **kwargs: Any) -> Any:
+        return _get_command(self)(*args, **kwargs)
 
 
 def get_click_type(

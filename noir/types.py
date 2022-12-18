@@ -40,7 +40,7 @@ class ContextFilePathParam(click.Path):
         return ContextFilePath(ns, rv)
 
 
-class ContextVarParam(click.Path):
+class ContextVarParam(click.types.StringParamType):
     def convert(self, value: Any, param: Any, ctx: Any) -> ContextVar:
         try:
             key, val = value.split("=")
