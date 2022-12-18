@@ -9,7 +9,7 @@ license = "BSD-3-Clause"
 noir = "noir.cli:app"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "~3.10"
 
 crashtest = "0.3.1"
 pyyaml = "5.3.1"
@@ -19,8 +19,7 @@ tomli-w = "1.0.0"
 typer = "0.7.0"
 
 [tool.poetry.dev-dependencies]
-mypy = "0.812"
-pylint = "~2.7.4"
+mypy = "0.991"
 pytest = "~6.2.3"
 
 [build-system]

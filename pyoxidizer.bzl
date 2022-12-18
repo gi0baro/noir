@@ -3,7 +3,7 @@ def make_exe():
         flavor = "standalone_static"
     else:
         flavor = "standalone"
-    dist = default_python_distribution(python_version="3.9", flavor=flavor)
+    dist = default_python_distribution(python_version="3.10", flavor=flavor)
 
     policy = dist.make_python_packaging_policy()
     policy.resources_location_fallback = "filesystem-relative:lib"
