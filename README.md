@@ -26,13 +26,14 @@ Arguments:
   SOURCE  The template file to use.  [required]
 
 Options:
-  -c, --context PATH              Context file(s) to use.
   -e, --eval                      Parse source as template string.
+  -v, --var TEXT                  Context variable(s) to apply.
+  -c, --context PATH              Context file(s) to use.
   -f, --format [env|ini|json|toml|yaml|yml]
                                   Context file format (default: guess from
                                   file extension).
   -o, --output FILENAME           Target output (default: stdout)
-  -v, --var PATH                  Context variable(s) to apply.
+  --delimiters TEXT               Template delimiters  [default: {{,}}]
   --version                       Show the version and exit.
   --install-completion [bash|zsh|fish|powershell|pwsh]
                                   Install completion for the specified shell.

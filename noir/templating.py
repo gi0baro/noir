@@ -5,7 +5,7 @@ import json
 import os
 import random
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Tuple
 
 import tomli_w
 import yaml
@@ -28,6 +28,15 @@ class Writer(_Writer):
 
 class Templater(Renoir):
     _writers = {**Renoir._writers, **{ESCAPES.common: Writer}}
+
+
+def templater(delimiters: Tuple[str, str]):
+    return Templater(
+        mode=MODES.plain,
+        delimiters=delimiters,
+        adjust_indent=True,
+        contexts=[base_ctx]
+    )
 
 
 def _indent(text: str, spaces: int = 2) -> str:
@@ -63,4 +72,3 @@ def base_ctx(ctx: Dict[str, Any]):
 
 
 yaml.add_representer(adict, yaml.representer.Representer.represent_dict)
-templater = Templater(mode=MODES.plain, adjust_indent=True, contexts=[base_ctx])

@@ -1,7 +1,9 @@
 import json
 import os
 
-from noir.templating import templater
+from noir.templating import templater as _build_templater
+
+templater = _build_templater(('{{', '}}'))
 
 
 def test_env():

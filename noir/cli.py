@@ -6,7 +6,7 @@ import crashtest.inspector
 from .__version__ import __version__
 from ._patch import typer
 from .ctx import ContextExt, load_context_file
-from .templating import templater
+from .templating import templater as _build_templater
 from .types import ContextFilePath, ContextVar, Source
 from .utils import obj_to_adict
 
@@ -52,17 +52,23 @@ def main(
         ...,
         help="The template file to use."
     ),
-    context: List[ContextFilePath] = typer.Option(
-        [],
-        "--context",
-        "-c",
-        help="Context file(s) to use."
-    ),
     eval: bool = typer.Option(
         False,
         "--eval",
         "-e",
         help="Parse source as template string."
+    ),
+    var: List[ContextVar] = typer.Option(
+        [],
+        "--var",
+        "-v",
+        help="Context variable(s) to apply."
+    ),
+    context: List[ContextFilePath] = typer.Option(
+        [],
+        "--context",
+        "-c",
+        help="Context file(s) to use."
     ),
     format: Optional[ContextExt] = typer.Option(
         None,
@@ -77,11 +83,10 @@ def main(
         show_default=False,
         help="Target output (default: stdout)"
     ),
-    var: List[ContextVar] = typer.Option(
-        [],
-        "--var",
-        "-v",
-        help="Context variable(s) to apply."
+    delimiters: str = typer.Option(
+        "{{,}}",
+        "--delimiters",
+        help="Template delimiters"
     ),
     _: Optional[bool] = typer.Option(
         None, "--version", callback=version_callback, is_eager=True,
@@ -94,6 +99,12 @@ def main(
 
     if not source.is_path and not eval:
         error(f"Invalid value for 'SOURCE': Path '{source.data}' does not exist.")
+    try:
+        delimiters_items = tuple(delimiters.split(","))
+        assert len(delimiters_items) == 2
+    except Exception:
+        error(f"Invalid value for delimiters: '{delimiters}'")
+
     stream_reader = lambda: typer.get_text_stream("stdin")
     tctx = {}
     for ctx_path in context:
@@ -112,6 +123,8 @@ def main(
             rctx[ns] = rctx.get(ns) or {}
             rctx = rctx[ns]
         rctx[var_param.key] = var_param.val
+
+    templater = _build_templater(delimiters_items)
     try:
         rendered = (
             templater.render(source.data, obj_to_adict(tctx)) if not eval else
