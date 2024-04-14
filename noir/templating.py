@@ -6,6 +6,7 @@ import json
 import os
 import pathlib
 import random
+import uuid
 
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -123,6 +124,7 @@ def base_ctx(ctx: Dict[str, Any]):
         datetime=datetime,
         hashlib=hashlib,
         random=random,
+        uuid=uuid,
         env=obj_to_adict(os.environ),
         base64encode=_base64encode,
         base64decode=_base64decode,
