@@ -67,6 +67,7 @@ The default context in Noir already imports the following modules from the Pytho
 - datetime
 - hashlib
 - random
+- uuid
 
 > **Note:** additional modules from standard library might be loaded with the `import` statement
 
@@ -77,6 +78,32 @@ An object containing environment variables.
 ```ini
 foo="{{ =env.VAR_FOO }}"
 bar="{{ =env["VAR_BAR"] }}"
+```
+
+#### Base64 shortcuts
+
+Shortcuts for `base64.b64encode` and `base64.b64decode` handling encoding/decoding:
+
+```yaml
+hash: {{ =base64encode("foobar") }}
+decoded_hash: {{ =base64decode(hash) }}
+```
+
+#### CIDR helpers
+
+Functions to interact with IPv4/IPv6 objects:
+
+```
+cidr.subnet(prefix, newbits, netnum)
+cidr.host(prefix, hostnum)
+cidr.netmask(prefix)
+cidr.subnets(prefix, *newbits)
+```
+
+#### Pathlib Path
+
+```yaml
+target: {{ =Path.cwd() / "target" / "foo.bar" }}
 ```
 
 #### indent
