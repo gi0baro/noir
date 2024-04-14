@@ -1,4 +1,13 @@
-from noir.templating import _cidr_host, _cidr_netmask, _cidr_subnet, _cidr_subnets
+import base64
+
+from noir.templating import (
+    _base64decode,
+    _base64encode,
+    _cidr_host,
+    _cidr_netmask,
+    _cidr_subnet,
+    _cidr_subnets
+)
 
 
 def test_cidr_host():
@@ -24,3 +33,14 @@ def test_cidr_subnets():
         "10.1.32.0/24",
         "10.1.48.0/20",
     }
+
+
+def test_base64decode():
+    exp = base64.b64encode(b"test").decode()
+    assert _base64encode("test") == exp
+
+
+def test_base64encode():
+    v = base64.b64encode(b"test")
+    exp = base64.b64decode(v).decode()
+    assert _base64decode(v.decode()) == exp

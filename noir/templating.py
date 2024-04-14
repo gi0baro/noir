@@ -40,6 +40,22 @@ def templater(delimiters: Tuple[str, str]):
     )
 
 
+def _base64encode(value: Any) -> str:
+    if not isinstance(value, bytes):
+        if not isinstance(value, str):
+            value = str(value)
+        value = value.encode("utf8")
+    return base64.b64encode(value).decode("utf8")
+
+
+def _base64decode(value: Any) -> str:
+    if not isinstance(value, bytes):
+        if not isinstance(value, str):
+            value = str(value)
+        value = value.encode("utf8")
+    return base64.b64decode(value).decode("utf8")
+
+
 def _cidr_host(prefix: str, hostnum: int) -> str:
     net = ipaddress.ip_network(prefix, strict=False)
     return str(net._address_class(int(net.network_address) + hostnum))
@@ -107,6 +123,8 @@ def base_ctx(ctx: Dict[str, Any]):
         hashlib=hashlib,
         random=random,
         env=obj_to_adict(os.environ),
+        base64encode=_base64encode,
+        base64decode=_base64decode,
         cidr=adict(
             host=_cidr_host,
             netmask=_cidr_netmask,
