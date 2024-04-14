@@ -1,11 +1,12 @@
 import base64
 import datetime
 import hashlib
+import ipaddress
 import json
 import os
 import random
 
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import tomli_w
 import yaml
@@ -39,6 +40,48 @@ def templater(delimiters: Tuple[str, str]):
     )
 
 
+def _cidr_host(prefix: str, hostnum: int) -> str:
+    net = ipaddress.ip_network(prefix, strict=False)
+    return str(net._address_class(int(net.network_address) + hostnum))
+
+
+def _cidr_netmask(prefix: str) -> str:
+    return str(ipaddress.ip_network(prefix, strict=False).netmask)
+
+
+def _cidr_subnet(prefix: str, newbits: int, netnum: int) -> str:
+    net = ipaddress.ip_network(prefix, strict=False)
+    return str(
+        net.__class__(
+            (
+                int(net.network_address) +
+                (((int(net.hostmask) + 1) >> newbits) * netnum),
+                net._prefixlen + newbits
+            )
+        )
+    )
+
+
+def _cidr_subnets(prefix: str, *newbits: int) -> List[str]:
+    rv = []
+    net = ipaddress.ip_network(prefix, strict=False)
+    net_address = int(net.network_address)
+    shift = 0
+    for newbit in newbits:
+        offset = (int(net.hostmask) + 1) >> newbit
+        delta = 0
+        if shift % offset:
+            step = int(offset)
+            while step < shift:
+                step += offset
+            delta = step - shift
+            offset += delta
+        new_prefixlen = net._prefixlen + newbit
+        rv.append(str(net.__class__((net_address + shift + delta, new_prefixlen))))
+        shift += offset
+    return rv
+
+
 def _indent(text: str, spaces: int = 2) -> str:
     offset = " " * spaces
     rv = f"\n{offset}".join(text.split("\n"))
@@ -64,6 +107,12 @@ def base_ctx(ctx: Dict[str, Any]):
         hashlib=hashlib,
         random=random,
         env=obj_to_adict(os.environ),
+        cidr=adict(
+            host=_cidr_host,
+            netmask=_cidr_netmask,
+            subnet=_cidr_subnet,
+            subnets=_cidr_subnets
+        ),
         indent=_indent,
         to_json=_to_json,
         to_toml=_to_toml,
