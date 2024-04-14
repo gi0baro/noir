@@ -8,7 +8,7 @@ on:
 jobs:
   Linux-x86:
     runs-on: ubuntu-latest
-    container: ghcr.io/gi0baro/pyoxidizer:0.24.0-gnu
+    container: ghcr.io/gi0baro/pyoxidizer:0.24.0-musl
 
     steps:
       - uses: actions/checkout@v4
