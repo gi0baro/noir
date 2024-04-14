@@ -4,6 +4,7 @@ import hashlib
 import ipaddress
 import json
 import os
+import pathlib
 import random
 
 from typing import Any, Dict, List, Optional, Tuple
@@ -131,6 +132,7 @@ def base_ctx(ctx: Dict[str, Any]):
             subnet=_cidr_subnet,
             subnets=_cidr_subnets
         ),
+        Path=pathlib.Path,
         indent=_indent,
         to_json=_to_json,
         to_toml=_to_toml,
