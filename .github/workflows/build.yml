@@ -14,7 +14,7 @@ on:
 jobs:
   Linux-x86:
     runs-on: ubuntu-latest
-    container: ghcr.io/gi0baro/pyoxidizer:0.24.0-musl
+    container: ghcr.io/gi0baro/pyoxidizer:0.23.0-musl
 
     steps:
     - uses: actions/checkout@v4
@@ -50,7 +50,7 @@ jobs:
   #   - uses: uraimo/run-on-arch-action@v2
   #     name: Build release
   #     with:
-  #       base_image: --platform=linux/arm64 ghcr.io/gi0baro/pyoxidizer:0.24.0-gnu
+  #       base_image: --platform=linux/arm64 ghcr.io/gi0baro/pyoxidizer:0.23.0-gnu
   #       env: |
   #         BUILD_VERSION: ${{ steps.build_version.outputs.version }}
   #       run: |
@@ -91,7 +91,7 @@ jobs:
         python-version: "3.10"
     - name: Install PyOxidizer
       run: |
-        pip install pyoxidizer==0.24.0
+        pip install pyoxidizer==0.23.0
     # - name: Build x86_64 release
     #   run: |
     #     make build_mac ARCH=x86_64-apple-darwin
@@ -145,7 +145,7 @@ jobs:
         python-version: "3.10"
     - name: Install PyOxidizer
       run: |
-        pip install pyoxidizer==0.24.0
+        pip install pyoxidizer==0.23.0
     - name: Build x86_64 release
       shell: bash
       run: |
