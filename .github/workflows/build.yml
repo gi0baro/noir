@@ -25,6 +25,7 @@ jobs:
     - name: Build release
       run: |
         make build_linux
+        build/x86_64-unknown-linux-musl/release/install/noir --version
         make pack_linux BUILD_VERSION=${{ steps.build_version.outputs.version }}
     - name: Upload release file
       uses: actions/upload-artifact@v3
